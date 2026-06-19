@@ -520,9 +520,10 @@ async function Ve() {
     lastCheck: Date.now(),
     lastError: null,
   };
+  let t = null;
   try {
-    const t = await findFlowTabs();
-    if (0 === t.length)
+    const a = await findFlowTabs();
+    if (0 === a.length)
       return (
         (e.lastError = "Open Google Flow and sign in with Google if prompted"),
         (c = null),
@@ -530,7 +531,7 @@ async function Ve() {
         Ke(),
         e
       );
-    const a = t.sort((e, t) =>
+    t = a.sort((e, t) =>
       "complete" === e.status && "complete" !== t.status
         ? -1
         : "complete" === t.status && "complete" !== e.status
@@ -538,12 +539,12 @@ async function Ve() {
           : (t.lastAccessed || 0) - (e.lastAccessed || 0),
     )[0];
     if (
-      ((e.flowTabId = a.id),
-      (c = a.id),
+      ((e.flowTabId = t.id),
+      (c = t.id),
       chrome.sidePanel
-        .setOptions({ tabId: a.id, path: "sidepanel.html", enabled: !0 })
+        .setOptions({ tabId: t.id, path: "sidepanel.html", enabled: !0 })
         .catch(() => {}),
-      "complete" !== a.status)
+      "complete" !== t.status)
     )
       return (
         (e.status = "connecting"),
@@ -561,11 +562,11 @@ async function Ve() {
     );
   }
   try {
-    const t = getProjectIdFromUrl(a.url) || ((u = null), await Xe());
-    ((u = t || null),
-      (e.hasProject = !!t),
-      t || (e.lastError = "Open or create a project in Flow"));
-  } catch (t) {
+    const a = getProjectIdFromUrl(t?.url) || ((u = null), await Xe());
+    ((u = a || null),
+      (e.hasProject = !!a),
+      a || (e.lastError = "Open or create a project in Flow"));
+  } catch (a) {
     e.lastError = "Open or create a project in Flow";
   }
   return (
