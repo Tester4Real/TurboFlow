@@ -107,7 +107,16 @@ class ye extends Error {
   }
 }
 function Ie(e) {
-  return !!e && /labs\.google\/fx\/.*tools\/flow/.test(e);
+  if (!e) return !1;
+  try {
+    const t = new URL(e);
+    return (
+      "labs.google" === t.hostname &&
+      /^\/fx\/(?:[^/]+\/)?tools\/flow(?:\/|$)/.test(t.pathname)
+    );
+  } catch (t) {
+    return /labs\.google\/fx\/(?:[^/]+\/)?tools\/flow(?:[/?#]|$)/.test(e);
+  }
 }
 let Ae = null;
 async function Ee() {
@@ -447,12 +456,10 @@ async function Ve() {
     lastError: null,
   };
   try {
-    const t = (
-      await chrome.tabs.query({ url: "https://labs.google/fx/*" })
-    ).filter((e) => e.url && Ie(e.url));
+    const t = (await chrome.tabs.query({})).filter((e) => e.url && Ie(e.url));
     if (0 === t.length)
       return (
-        (e.lastError = "Open Google Flow to get started"),
+        (e.lastError = "Open Google Flow and sign in with Google if prompted"),
         (c = null),
         (_vD = e),
         Ke(),
@@ -669,7 +676,7 @@ async function Xe() {
       target: { tabId: c },
       world: "MAIN",
       func: () => {
-        const e = window.location.href.match(/project\/([a-f0-9-]+)/);
+        const e = window.location.href.match(/\/project\/([^/?#]+)/);
         return e ? e[1] : null;
       },
     });

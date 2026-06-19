@@ -6,8 +6,8 @@
     {
       "js": ["qw-4d5e6f7a.js"],
       "matches": [
-        "https://labs.google/fx/*/tools/flow/*",
-        "https://labs.google/fx/tools/flow/*"
+        "https://labs.google/fx/*/tools/flow*",
+        "https://labs.google/fx/tools/flow*"
       ],
       "run_at": "document_start",
       "world": "MAIN"
@@ -15,8 +15,8 @@
     {
       "js": ["zr-7f2a1b3c.js"],
       "matches": [
-        "https://labs.google/fx/*/tools/flow/*",
-        "https://labs.google/fx/tools/flow/*"
+        "https://labs.google/fx/*/tools/flow*",
+        "https://labs.google/fx/tools/flow*"
       ],
       "run_at": "document_start",
       "world": "ISOLATED"

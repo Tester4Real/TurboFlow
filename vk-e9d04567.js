@@ -1007,7 +1007,7 @@ async function Oe() {
               title: "Not Connected to Flow",
               message:
                 "You need an open <strong>Google Flow</strong> tab to generate images.",
-              hint: '<strong>Step 1:</strong> Open <a href="https://labs.google/fx/tools/flow" target="_blank" style="color:#a8c7fa">labs.google/fx/tools/flow</a><br>\n                           <strong>Step 2:</strong> Create or open a project<br>\n                           <strong>Step 3:</strong> Wait for the status badge to show "Connected"',
+              hint: '<strong>Step 1:</strong> Open <a href="https://labs.google/fx/tools/flow" target="_blank" style="color:#a8c7fa">labs.google/fx/tools/flow</a><br>\n                           <strong>Step 2:</strong> Sign in with Google if Flow asks<br>\n                           <strong>Step 3:</strong> Create or open a project<br>\n                           <strong>Step 4:</strong> Wait for the status badge to show "Connected"',
             }),
         !1
       );
@@ -1884,7 +1884,7 @@ async function St(e) {
         icon: "🔌",
         title: "Not Connected to Flow",
         message: `You need an open Google Flow project to ${e}.`,
-        hint: '<strong>Step 1:</strong> Open <a href="https://labs.google/fx/tools/flow" target="_blank" style="color:#a8c7fa">labs.google/fx</a><br><strong>Step 2:</strong> Create or open a project<br><strong>Step 3:</strong> Wait for the status badge to show "Connected"',
+        hint: '<strong>Step 1:</strong> Open <a href="https://labs.google/fx/tools/flow" target="_blank" style="color:#a8c7fa">labs.google/fx</a><br><strong>Step 2:</strong> Sign in with Google if Flow asks<br><strong>Step 3:</strong> Create or open a project<br><strong>Step 4:</strong> Wait for the status badge to show "Connected"',
       }),
       !1)
     );
