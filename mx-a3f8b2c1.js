@@ -126,12 +126,30 @@ async function findFlowTabs() {
           a?.id && !e.has(a.id) && e.set(a.id, a);
       } catch (e) {}
     };
-  return (
+  async function a(e) {
+    if (e.url) return e.url;
+    try {
+      const t = await chrome.scripting.executeScript({
+        target: { tabId: e.id },
+        world: "MAIN",
+        func: () => window.location.href,
+      });
+      return t?.[0]?.result || null;
+    } catch (e) {
+      return null;
+    }
+  }
+  (await t({ active: !0, lastFocusedWindow: !0 }),
     await t({ active: !0, currentWindow: !0 }),
+    await t({ active: !0 }),
     await t({ url: "https://labs.google/fx/*" }),
-    await t({}),
-    [...e.values()].filter((e) => e.url && Ie(e.url))
-  );
+    await t({}));
+  const r = [];
+  for (const t of e.values()) {
+    const e = await a(t);
+    e && Ie(e) && r.push({ ...t, url: e });
+  }
+  return r;
 }
 function getProjectIdFromUrl(e) {
   if (!e) return null;
@@ -543,9 +561,9 @@ async function Ve() {
     );
   }
   try {
-    u = null;
-    const t = await Xe();
-    ((e.hasProject = !!t),
+    const t = getProjectIdFromUrl(a.url) || ((u = null), await Xe());
+    ((u = t || null),
+      (e.hasProject = !!t),
       t || (e.lastError = "Open or create a project in Flow"));
   } catch (t) {
     e.lastError = "Open or create a project in Flow";
