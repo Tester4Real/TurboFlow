@@ -1181,12 +1181,17 @@ const Be = r("#auth-screen"),
   je = r("#main-app"),
   Ge = document.getElementById("loading-screen");
 async function He() {
-  s = LOCAL_USER;
-  i = LOCAL_PLAN;
-  We();
+  try {
+    const e = await chrome.runtime.sendMessage({ type: "GET_AUTH_STATE" });
+    e?.user ? ((s = e.user), (i = e.plan || LOCAL_PLAN), We()) : Qe();
+  } catch (e) {
+    Qe();
+  }
 }
 function Qe() {
-  We();
+  (Ge && (Ge.style.display = "none"),
+    Be && (Be.style.display = "block"),
+    je && (je.style.display = "none"));
 }
 function We() {
   s = s || LOCAL_USER;
@@ -1235,8 +1240,32 @@ function Ye() {
       },
     ));
 }
-(r("#btn-google-signin")?.addEventListener("click", We),
-  r("#btn-sign-out")?.addEventListener("click", We),
+(r("#btn-google-signin")?.addEventListener("click", async () => {
+  const e = me(),
+    t = r("#btn-google-signin"),
+    a = t?.innerHTML || "";
+  t &&
+    ((t.disabled = !0),
+    (t.innerHTML = '<div class="uploading-spinner"></div> Signing in...'));
+  try {
+    const t = await chrome.runtime.sendMessage({
+      type: "SIGN_IN",
+      fingerprint: e,
+    });
+    t?.ok
+      ? ((s = t.user), (i = t.plan || LOCAL_PLAN), We())
+      : alert("Sign in failed: " + (t?.error || "Unknown error"));
+  } catch (e) {
+    alert("Sign in error: " + e.message);
+  }
+  t && ((t.disabled = !1), (t.innerHTML = a));
+}),
+  r("#btn-sign-out")?.addEventListener("click", async () => {
+    (await chrome.runtime.sendMessage({ type: "SIGN_OUT" }),
+      (s = null),
+      (i = null),
+      Qe());
+  }),
   r("#btn-upgrade")?.addEventListener("click", () => {}),
   r("#btn-close-upgrade")?.addEventListener("click", () => {}),
   r("#btn-close-limit")?.addEventListener("click", () => {}),

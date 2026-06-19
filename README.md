@@ -4,12 +4,13 @@ TurboFlow is an unpacked Chrome extension for batch generation workflows on Goog
 
 This repository version is local-only:
 
-- no TurboFlow account sign-in
+- Google sign-in is used only for local extension initialization
+- no TurboFlow account server sign-in
 - no TurboFlow membership or subscription checks
 - no TurboFlow backend API calls
 - no checkout, payment, or portal integration
 
-The extension uses the Google Flow page that is already open in your browser, so usage is limited by the Google account and Flow access you are signed in with.
+The extension uses the Google Flow page that is already open in your browser, so generation is limited by the Google account and Flow access you are signed in with.
 
 ## Install
 
@@ -25,4 +26,4 @@ The extension is scoped to `https://labs.google/*` and uses Chrome permissions f
 
 ## Notes
 
-This is the cleaned source for direct GitHub publishing. The extension still contains bundled JavaScript assets from the original build, but the account, membership, checkout, and external TurboFlow server paths have been removed or replaced with local no-op behavior.
+This is the cleaned source for direct GitHub publishing. The extension still contains bundled JavaScript assets from the original build, but the TurboFlow membership, checkout, and external TurboFlow server paths have been removed or replaced with local no-op behavior.

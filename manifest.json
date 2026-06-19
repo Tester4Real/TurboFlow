@@ -30,9 +30,11 @@
     "32": "icons/icon32.png",
     "48": "icons/icon48.png"
   },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3EBenyEvHnjvqHGIacbrIDrV8eev2zOAanOI4KALb2RuVOkWeQOqbY+1Az9D40FY83w4txUN+hV41msJnkHqHSlcY4WJDjpW/2oYlsTTrm6gqC+P5XJuzGadgG4bEQUnm31BAAOeTN8xs0t8dZm3zcv9Q4CCcK7I4PYZuHhy8ZGwpYrgoC3NNYEYrq8vxh6Z01f0Mi/+tcGxrM3VszCqOoaZZq/yD1O+5ri3TXc328W7YYLVzUtsTbiprtJ/jDxqKvS8uTZnsXLhYYCZcUNT9AzSeXuOQJmXfam0rf0vRhc3xy9ZmITv0cDuN9I4hUMjpkfR7n7r7EwaGX4nVqqFDwIDAQAB",
   "manifest_version": 3,
   "name": "TurboFlow - Auto Veo & Nano Banana Pro on Google Flow",
   "permissions": [
+    "identity",
     "sidePanel",
     "scripting",
     "storage",
@@ -43,5 +45,5 @@
   "side_panel": {
     "default_path": "sidepanel.html"
   },
-  "version": "2.2.12"
+  "version": "2.2.13"
 }
