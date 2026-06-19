@@ -1,0 +1,47 @@
+{
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "js": ["qw-4d5e6f7a.js"],
+      "matches": [
+        "https://labs.google/fx/*/tools/flow/*",
+        "https://labs.google/fx/tools/flow/*"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "js": ["zr-7f2a1b3c.js"],
+      "matches": [
+        "https://labs.google/fx/*/tools/flow/*",
+        "https://labs.google/fx/tools/flow/*"
+      ],
+      "run_at": "document_start",
+      "world": "ISOLATED"
+    }
+  ],
+  "description": "Automate Google Flow, batch image & video generation with Veo 3.1, Nano Banana Pro, auto 4K upscale & bulk download.",
+  "host_permissions": ["https://labs.google/*"],
+  "icons": {
+    "128": "icons/icon128.png",
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png"
+  },
+  "manifest_version": 3,
+  "name": "TurboFlow - Auto Veo & Nano Banana Pro on Google Flow",
+  "permissions": [
+    "sidePanel",
+    "scripting",
+    "storage",
+    "tabs",
+    "downloads",
+    "activeTab"
+  ],
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "version": "2.2.8"
+}
