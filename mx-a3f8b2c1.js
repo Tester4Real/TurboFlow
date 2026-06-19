@@ -118,38 +118,77 @@ function Ie(e) {
     return /labs\.google\/fx\/(?:[^/]+\/)?tools\/flow(?:[/?#]|$)/.test(e);
   }
 }
+let lastFlowTabSearch = null;
+function shortDebugUrl(e) {
+  return e ? e.slice(0, 160) : "";
+}
+function flowTabSearchDebugText() {
+  if (!lastFlowTabSearch) return "";
+  const e = lastFlowTabSearch.samples
+      .map((e) => {
+        const t = e.url || e.title || "no-url";
+        return (e.active ? "active " : "") + t;
+      })
+      .join(" | "),
+    t = lastFlowTabSearch.errors.slice(0, 3).join(" | ");
+  return (
+    `Scanned ${lastFlowTabSearch.scanned} tabs, matched ${lastFlowTabSearch.matched}.` +
+    (e ? " Saw: " + e : "") +
+    (t ? " Errors: " + t : "")
+  ).slice(0, 700);
+}
 async function findFlowTabs() {
   const e = new Map(),
-    t = async (t) => {
+    r = [],
+    o = [],
+    t = async (t, a) => {
       try {
         for (const a of await chrome.tabs.query(t))
           a?.id && !e.has(a.id) && e.set(a.id, a);
-      } catch (e) {}
+      } catch (e) {
+        r.push(a + ": " + (e?.message || String(e)));
+      }
     };
   async function a(e) {
+    const t = e.id;
     if (e.url) return e.url;
     try {
-      const t = await chrome.scripting.executeScript({
-        target: { tabId: e.id },
+      const a = await chrome.scripting.executeScript({
+        target: { tabId: t },
         world: "MAIN",
         func: () => window.location.href,
       });
-      return t?.[0]?.result || null;
+      return a?.[0]?.result || null;
     } catch (e) {
+      r.push("tab " + t + ": " + (e?.message || "script url blocked"));
       return null;
     }
   }
-  (await t({ active: !0, lastFocusedWindow: !0 }),
-    await t({ active: !0, currentWindow: !0 }),
-    await t({ active: !0 }),
-    await t({ url: "https://labs.google/fx/*" }),
-    await t({}));
-  const r = [];
+  (await t({ active: !0, lastFocusedWindow: !0 }, "last-focused active"),
+    await t({ active: !0, currentWindow: !0 }, "current active"),
+    await t({ active: !0 }, "all active"),
+    await t({ url: "https://labs.google/fx/*" }, "labs.google query"),
+    await t({}, "all tabs"));
+  const n = [];
   for (const t of e.values()) {
     const e = await a(t);
-    e && Ie(e) && r.push({ ...t, url: e });
+    (o.length < 8 &&
+      o.push({
+        active: !!t.active,
+        title: shortDebugUrl(t.title || ""),
+        url: shortDebugUrl(e || t.url || ""),
+      }),
+      e && Ie(e) && n.push({ ...t, url: e }));
   }
-  return r;
+  return (
+    (lastFlowTabSearch = {
+      scanned: e.size,
+      matched: n.length,
+      samples: o,
+      errors: r,
+    }),
+    n
+  );
 }
 function getProjectIdFromUrl(e) {
   if (!e) return null;
@@ -525,7 +564,8 @@ async function Ve() {
     const a = await findFlowTabs();
     if (0 === a.length)
       return (
-        (e.lastError = "Open Google Flow and sign in with Google if prompted"),
+        (e.lastError =
+          "Cannot see a Google Flow tab. " + flowTabSearchDebugText()),
         (c = null),
         (_vD = e),
         Ke(),

@@ -1161,7 +1161,8 @@ function Ue() {
       type: "CHECK_CONNECTION",
       deep: !0,
     });
-    e?.state && Ne(e.state);
+    (e?.state && Ne(e.state),
+      e?.state?.lastError && Te("Connection: " + e.state.lastError, "warn"));
   } catch (e) {
     Te("Connection check failed: " + e.message, "error");
   }
