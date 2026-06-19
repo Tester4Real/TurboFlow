@@ -118,6 +118,53 @@ function Ie(e) {
     return /labs\.google\/fx\/(?:[^/]+\/)?tools\/flow(?:[/?#]|$)/.test(e);
   }
 }
+async function findFlowTabs() {
+  const e = new Map(),
+    t = async (t) => {
+      try {
+        for (const a of await chrome.tabs.query(t))
+          a?.id && !e.has(a.id) && e.set(a.id, a);
+      } catch (e) {}
+    };
+  return (
+    await t({ active: !0, currentWindow: !0 }),
+    await t({ url: "https://labs.google/fx/*" }),
+    await t({}),
+    [...e.values()].filter((e) => e.url && Ie(e.url))
+  );
+}
+function getProjectIdFromUrl(e) {
+  if (!e) return null;
+  try {
+    const t = new URL(e).pathname.match(/\/project\/([^/?#]+)/);
+    return t ? t[1] : null;
+  } catch (t) {
+    const a = e.match(/\/project\/([^/?#]+)/);
+    return a ? a[1] : null;
+  }
+}
+function setFlowConnectionFromTab(e, t = {}) {
+  if (!e?.id) return null;
+  const a = t.projectId || getProjectIdFromUrl(t.url || e.url),
+    r = {
+      status: a ? "connected" : "connecting",
+      flowTabId: e.id,
+      hasProject: !!a,
+      lastCheck: Date.now(),
+      lastError: a ? null : "Open or create a project in Flow",
+      googlePaygateTier: ne,
+    };
+  return (
+    (c = e.id),
+    (u = a || null),
+    chrome.sidePanel
+      ?.setOptions({ tabId: e.id, path: "sidepanel.html", enabled: !0 })
+      .catch(() => {}),
+    (_vD = r),
+    Ke(),
+    r
+  );
+}
 let Ae = null;
 async function Ee() {
   return i;
@@ -456,7 +503,7 @@ async function Ve() {
     lastError: null,
   };
   try {
-    const t = (await chrome.tabs.query({})).filter((e) => e.url && Ie(e.url));
+    const t = await findFlowTabs();
     if (0 === t.length)
       return (
         (e.lastError = "Open Google Flow and sign in with Google if prompted"),
@@ -676,7 +723,9 @@ async function Xe() {
       target: { tabId: c },
       world: "MAIN",
       func: () => {
-        const e = window.location.href.match(/\/project\/([^/?#]+)/);
+        const e =
+          window.location.pathname.match(/\/project\/([^/?#]+)/) ||
+          window.location.href.match(/\/project\/([^/?#]+)/);
         return e ? e[1] : null;
       },
     });
@@ -3214,6 +3263,21 @@ function Yt(e, t = "info") {
     );
   }),
   chrome.runtime.onMessage.addListener((e, a, r) => {
+    if ("FLOW_PAGE_READY" === e.type) {
+      const t = a?.tab;
+      return (
+        t && Ie(e.url || t.url)
+          ? r({
+              ok: !0,
+              state: setFlowConnectionFromTab(t, {
+                url: e.url || t.url,
+                projectId: e.projectId,
+              }),
+            })
+          : r({ ok: !1 }),
+        !0
+      );
+    }
     if ("CHECK_CONNECTION" === e.type)
       return (
         (e.deep ? Ve() : ze())
